@@ -228,7 +228,7 @@ public class QTouchInterface {
 		JPanel discardPanel = new JPanel(new BorderLayout(5,5));
 		discardPanel.add(new JLabel("Discard", SwingConstants.CENTER), BorderLayout.NORTH);
 
-		JButton discardPile = new JButton(new ImageIcon("images/pile2.jpg"));
+		JButton discardPile = new JButton(new ImageIcon("images/cardpile2.jpg"));
 		discardPile.setPreferredSize(new Dimension(100, 150));
 		discardPanel.add(discardPile, BorderLayout.CENTER);
 

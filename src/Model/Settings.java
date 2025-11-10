@@ -10,4 +10,7 @@ public class Settings {
     private Locale language;
 
 
+    public void setLocale(Locale locale) {
+        this.language = locale;
+    }
 }

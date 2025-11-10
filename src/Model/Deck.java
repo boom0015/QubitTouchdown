@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *Just a list of cards, this'll be used to represent the cards in the actual deck, as well as another
@@ -15,16 +16,22 @@ public class Deck {
      * Logic to build the deck. Not sure if I should implement shuffle here or make a new method for it
      * @return
      */
-    public Deck CreateDeck() {
-        Deck d = new Deck();
+   public Deck(){
         cardsInDeck = new ArrayList<>();
-
-        return d;
+        Card emptyDeck = new Card("pile2");
+        addToDeck(emptyDeck);
     }
     public void addToDeck(Card card) {
         cardsInDeck.add(card);
     }
+    /**
+     * Shuffles the cards in the deck
+     */
     public void shuffle() {
+    	Collections.shuffle(cardsInDeck);
+    }
 
+    public Card getTopCard() {
+        return cardsInDeck.get(cardsInDeck.size() - 1);
     }
 }

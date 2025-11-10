@@ -5,14 +5,21 @@ package Model;
  * played.
  */
 public class BoardState {
+    public BoardState() {}
+    public BoardState(String type){
+        this.position = type;
+        imgPath = "images/qtboard"+ position + ".jpg";
+    }
     //Maybe rename to position?
-    private String position; //The current board/ position of ball eg:boardI boardP etc.
-    public final String imgPath = "images/qtboard"+ position + ".png";
+    protected String position; //The current board/ position of ball eg:boardI boardP etc.
+    public String imgPath = "images/qtboard"+ position + ".jpg";
 
     public String getBoardInUse() {
         return position;
     }
-
+    public String getBoardImg() {
+        return imgPath;
+    }
     /**
      * Implement logic to change board based on card last played or diceroll at beginning
      */

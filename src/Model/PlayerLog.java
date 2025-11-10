@@ -1,5 +1,6 @@
 package Model;
 
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 /**
@@ -7,6 +8,7 @@ import java.util.ArrayList;
  */
 public class PlayerLog {
     private ArrayList<LogEntry> log;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void addLog(LogEntry logentry){
         log.add(logentry);

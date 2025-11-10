@@ -7,8 +7,9 @@ package Model;
 public class Dice {
     private int diceResult;
 
-    public void rollDice(){
-        diceResult = (int) (Math.random() * 6) + 1;
+    public int rollDice(){
+        diceResult = (int) (Math.random() * 2);
+        return diceResult;
     }
     public int getDiceResult() {
         return diceResult;

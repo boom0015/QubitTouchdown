@@ -5,12 +5,17 @@ package Model;
  */
 public class Card {
     private String cardType;
-    private String imgPath = "images/card"+cardType+".png";
+    private String imgPath = "images/card"+cardType+".jpg";
 
     public Card(String type) {
         this.cardType = type;
+        imgPath = "images/card"+cardType+".jpg";
     }
     public String getCardType() {
         return cardType;
+    }
+
+    public String getImgPath() {
+        return imgPath;
     }
 }
