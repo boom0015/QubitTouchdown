@@ -22,6 +22,8 @@ public class QTouchInterface {
     private String lAppearance = "Appearance";
     private String lHelp = "Help";
     private String lLanguage = "Language";
+    private String lload = "Load";
+    private String lSave = "Save";
     //Objects that will make up the GUI
 
     private BoardState board;
@@ -63,6 +65,9 @@ public class QTouchInterface {
         lAppearance = bundle.getString("menu.appearance");
         lHelp = bundle.getString("menu.help");
         lLanguage = bundle.getString("menu.language");
+        lload = bundle.getString("menu.load");
+        lSave = bundle.getString("menu.save");
+
 
         menu = createMenu();
 
@@ -88,7 +93,7 @@ public class QTouchInterface {
     private JMenuBar createMenu(){
         Menu menu = new Menu(controller);
         JMenuBar menuBar = new JMenuBar();
-        menuBar =menu.createMenu(english, french, lGame, lSettings, lAppearance, lHelp, lLanguage);
+        menuBar =menu.createMenu(english, french, lGame, lSettings, lAppearance, lHelp, lLanguage, lload, lSave);
         return menuBar;
     }
 

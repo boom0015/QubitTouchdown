@@ -89,4 +89,31 @@ public class GameController {
     public int getCurrentIndex() {
        return model.getIndex();
     }
+
+    public void loadGame() {
+        String filename = JOptionPane.showInputDialog(
+                null,                         // parent component (null = center on screen)
+                "Enter the name of the game file to load",           // message
+                "File prompt",               // title
+                JOptionPane.QUESTION_MESSAGE  // icon type
+        );
+        if (filename != null) {
+            //use filename
+            model.load();
+        }
+
+    }
+
+    public void saveGame() {
+        String filename = JOptionPane.showInputDialog(
+                null,                         // parent component (null = center on screen)
+                "Enter the name of the game file",           // message
+                "File prompt",               // title
+                JOptionPane.QUESTION_MESSAGE  // icon type
+        );
+        if (filename != null) {
+            //use filename
+            model.save();
+        }
+    }
 }

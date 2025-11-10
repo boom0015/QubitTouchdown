@@ -3,6 +3,7 @@ package View;
 import Controller.GameController;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 
 /**
@@ -16,13 +17,23 @@ public class Menu extends JMenuBar{
         this.controller = controller;
     }
     public JMenuBar createMenu(String english,
-     String french, String lGame, String lSettings, String lAppearance, String lHelp, String lLanguage) {
+     String french, String lGame, String lSettings, String lAppearance, String lHelp, String lLanguage, String lload
+    , String lSave) {
         menuBar = new JMenuBar();
         JMenu menu, settings, help, language, appearance;
-        JMenuItem englishItem, frenchItem;
+        JMenuItem englishItem, frenchItem, load, save, exit;
 
         // create the menu item for game
         menu = new JMenu(lGame);
+        load= new JMenuItem(lload);
+        menu.add(load);
+
+        save= new JMenuItem(lSave);
+        menu.add(save);
+        load.addActionListener(e -> controller.loadGame());
+        save.addActionListener(e -> controller.saveGame());
+
+
         menuBar.add(menu);
 
 

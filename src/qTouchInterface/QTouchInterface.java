@@ -49,6 +49,7 @@ public class QTouchInterface {
 		qInterface.lLanguage = bundle.getString("menu.language");
 
 
+
 		frame.setJMenuBar(qInterface.createMenu());
 	    frame.setSize(1280, 720);
 		frame.setLayout(new BorderLayout());
