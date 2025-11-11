@@ -1,11 +1,13 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * A string message. These will be built based on the messages in each Locale. Many of these will compose the entire log
  * which will be recorded iin the gamestate and readable to the player.
  *
  */
-public class LogEntry {
+public class LogEntry implements Serializable {
     private String logEntry;
 
     /**

@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Locale;
  * Whatever, it all goes in here so we have a state that can be used for modelling purposes
  * as well as savestates
  */
-public class Gamestate {
+public class Gamestate implements Serializable {
 	private int diceResult;
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
@@ -17,14 +18,14 @@ public class Gamestate {
 	private Settings properties;
 	
 	private Dice dice = new Dice();
-	private BoardState board = new BoardState();
+	private BoardState board = new BoardState("0");
 
 	public void initializeNewGame(){
 		properties = new Settings();
 		properties.setLocale(Locale.ENGLISH);
 
-		board = new BoardState("A");
-		currentPlayerIndex =1;
+		board.setPosition("A");
+		currentPlayerIndex =0;
 
 		cardDeck = new Deck();
 		cardDeck.cardsInDeck.removeFirst();
@@ -39,6 +40,7 @@ public class Gamestate {
 		for(int i=0;i<4;i++) {
 			player2.drawCard(cardDeck);
 		}
+		player2.setLastScored();
 
 
 	}
@@ -109,14 +111,16 @@ public class Gamestate {
 				}
 				break;
 			case "P":
-				if(type.equals("H")) {
-					board.position="0";
-				}
+				player2.scoreUp();
+				player2.setLastScored();
+				board.setPosition("0");
+				currentPlayerIndex = 0;
 				break;
-			case "M":
-				if(type.equals("H")) {
-					board = new BoardState("1");
-				}
+			case"M":
+				player1.scoreUp();
+				player1.setLastScored();
+				board.setPosition("0");
+				currentPlayerIndex = 0;
 				break;
 			default:
 				board.position="0";
@@ -129,6 +133,7 @@ public class Gamestate {
 		}else if(currentPlayerIndex ==2) {
 			currentPlayerIndex=1;
 		}
+		//System.out.println(currentPlayerIndex);
 		
 	}
 	
@@ -151,6 +156,9 @@ public class Gamestate {
 		return properties;
 	}
 
+	public int getDiceResult() {
+		return dice.getDiceResult();
+	}
 	public Dice getDice() {
 		return dice;
 	}
@@ -198,5 +206,29 @@ public class Gamestate {
 
 	public int getIndex() {
 		return currentPlayerIndex;
+	}
+
+	public int getp2Score() {
+		return player2.getScore();
+	}
+
+	public int getp1Score() {
+		return player1.getScore();
+	}
+	public boolean isLastScored(int player){
+		if (player == 1){
+			return player1.isLastScored();
+		}
+		else if (player == 1) {
+			return player2.isLastScored();
+		}
+		return false;
+	}
+	public void setCurrentPlayerIndex(int currentPlayerIndex) {
+		this.currentPlayerIndex = currentPlayerIndex;
+	}
+
+	public void setBoard(String type) {
+		board.setPosition(type);
 	}
 }

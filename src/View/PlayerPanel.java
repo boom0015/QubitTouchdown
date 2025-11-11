@@ -77,13 +77,13 @@ public class PlayerPanel extends JPanel {
             cardButton.setMinimumSize(new Dimension(100, 150));
 
             cardButton.addActionListener(e -> {
-                        if (player.getIndex()== controller.getCurrentIndex()) {
+                        if (player.getIndex() == controller.getCurrentIndex()
+                                && !"Pile2".equals(card.getCardType())) {
                             controller.playCard(card);
                             refreshHand();
                             controller.refreshDiscard();
                         }
-                        }
-
+                    }
 
             );
                 //Add logic to print log to player text box / game logic
@@ -110,13 +110,15 @@ public class PlayerPanel extends JPanel {
             cardButton.setMaximumSize(new Dimension(100, 150));
             cardButton.setMinimumSize(new Dimension(100, 150));
 
+
             cardButton.addActionListener(e -> {
-                        if (player.getIndex()== controller.getCurrentIndex()) {
-                            controller.playCard(card);
-                            refreshHand();
-                            controller.refreshDiscard();
-                        }
-                    }
+                if (player.getIndex() == controller.getCurrentIndex()
+                        && !"Pile2".equals(card.getCardType())) {
+                    controller.playCard(card);
+                    refreshHand();
+                    controller.refreshDiscard();
+                }
+            }
 
             );
             //Add logic to print log to player text box / game logic

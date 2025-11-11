@@ -5,6 +5,7 @@ import View.QTouchInterface;
 import View.SouthPanel;
 
 import javax.swing.*;
+import java.io.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -37,6 +38,10 @@ public class GameController {
         if (view != null) view.relaunchGUI(locale);
     }
 
+    public int getDiceResult() {
+        return model.getDiceResult();
+
+    }
     public Dice getDice() {
         return model.getDice();
     }
@@ -63,6 +68,8 @@ public class GameController {
         model.playCard(card);
         model.drawCard();
         model.nextPlayer();
+
+        view.refreshBoard();
     }
 
     public Player getPlayer(int player){
@@ -90,7 +97,7 @@ public class GameController {
        return model.getIndex();
     }
 
-    public void loadGame() {
+    public void loadGame() throws IOException {
         String filename = JOptionPane.showInputDialog(
                 null,                         // parent component (null = center on screen)
                 "Enter the name of the game file to load",           // message
@@ -99,12 +106,24 @@ public class GameController {
         );
         if (filename != null) {
             //use filename
-            model.load();
+            FileInputStream fis = new FileInputStream(filename);
+            ObjectInputStream ois =new ObjectInputStream(fis);
+            try {
+                model=(Gamestate) ois.readObject();
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ois.close();
+            view.relaunchGUI(null);
         }
 
     }
 
-    public void saveGame() {
+    public void saveGame() throws IOException{
         String filename = JOptionPane.showInputDialog(
                 null,                         // parent component (null = center on screen)
                 "Enter the name of the game file",           // message
@@ -113,7 +132,31 @@ public class GameController {
         );
         if (filename != null) {
             //use filename
-            model.save();
+            FileOutputStream fos = new FileOutputStream(filename);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(model);
+            oos.close();
         }
     }
+
+    public int getp1Score() {
+        return model.getp1Score();
+    }
+    public int getp2Score() {
+        return model.getp2Score();
+    }
+    public void setPlayerIndex(int index){
+        model.setCurrentPlayerIndex(index);
+    }
+
+    public void setBoard(String type) {
+        model.setBoard(type);
+    }
+
+    public void refreshBoard() {
+        view.refreshBoard();
+    }
+
 }
+
+

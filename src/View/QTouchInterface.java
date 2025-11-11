@@ -24,13 +24,17 @@ public class QTouchInterface {
     private String lLanguage = "Language";
     private String lload = "Load";
     private String lSave = "Save";
+
     //Objects that will make up the GUI
 
     private BoardState board;
+    private Board boardPanel;
     private Player player1;
     private Player player2;
     private SouthPanel southPanel;
     private JMenuBar menu;
+
+
     public QTouchInterface() {}
     public QTouchInterface(GameController controller) {
         this.controller = controller;
@@ -83,8 +87,8 @@ public class QTouchInterface {
         frame.add(buildPlayerPanel(player1), BorderLayout .WEST);
         frame.add(buildPlayerPanel(player2), BorderLayout .EAST);
 
-
-        frame.add(buildBoardPanel(), BorderLayout.CENTER);
+        boardPanel = buildBoardPanel();
+        frame.add(boardPanel, BorderLayout.CENTER);
 
 
 
@@ -117,11 +121,9 @@ public class QTouchInterface {
         playerPanel = playerPanelBuilder.playerBuilder(player);
         return playerPanel;
     }
-    private  JPanel buildBoardPanel(){
+    private Board buildBoardPanel(){
       board = controller.getBoard();
-      Board boardPanelBuilder = new Board(board);
-      JPanel boardPanel = new JPanel();
-      boardPanel= boardPanelBuilder.buildBoard(board);
+      Board boardPanel = new Board(board);
       return boardPanel;
     }
     public void setController(GameController controller){
@@ -129,5 +131,8 @@ public class QTouchInterface {
     }
     public SouthPanel getSouthPanel(){
         return southPanel;
+    }
+    public void refreshBoard(){
+        boardPanel.refreshBoard();
     }
 }

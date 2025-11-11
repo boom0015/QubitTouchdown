@@ -25,6 +25,8 @@ public class SouthPanel extends JPanel {
 
     private JPanel discardPanel;
     private JButton discardPile;
+    JLabel p1Score;
+    JLabel p2Score;
 
 public SouthPanel(GameController controller, Dice dice, Deck discard, Deck draw, PlayerLog p1Log, PlayerLog p2Log) {
     this.controller = controller;
@@ -46,11 +48,16 @@ public SouthPanel(GameController controller, Dice dice, Deck discard, Deck draw,
 
     JPanel centerPiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 0));
 
+
+    p1Score = new JLabel("Player 1 Score: " + controller.getp1Score());
+    p2Score = new JLabel("Player 2 Score: " + controller.getp2Score());
+
     JPanel drawPanel = new JPanel(new BorderLayout(5, 5));
     drawPanel.add(new JLabel("Draw", SwingConstants.CENTER), BorderLayout.NORTH);
     JButton drawPile = new JButton(new ImageIcon("images/pile1.jpg"));
     drawPile.setPreferredSize(new Dimension(100, 150));
     drawPanel.add(drawPile, BorderLayout.CENTER);
+    drawPanel.add(p1Score, BorderLayout.WEST);
 
     discardPanel = new JPanel(new BorderLayout(5, 5));
     discardPanel.add(new JLabel("Discard", SwingConstants.CENTER), BorderLayout.NORTH);
@@ -58,6 +65,7 @@ public SouthPanel(GameController controller, Dice dice, Deck discard, Deck draw,
     discardPile = new JButton(new ImageIcon(discard.getTopCard().getImgPath()));
     discardPile.setPreferredSize(new Dimension(100, 150));
     discardPanel.add(discardPile, BorderLayout.CENTER);
+    discardPanel.add(p2Score, BorderLayout.EAST);
 
     JPanel dicePanel = new JPanel(new BorderLayout(5, 5));
     JLabel diceLabel = new JLabel("0", SwingConstants.CENTER);
@@ -66,7 +74,22 @@ public SouthPanel(GameController controller, Dice dice, Deck discard, Deck draw,
     dicePanel.add(diceLabel, BorderLayout.CENTER);
     dicePanel.add(rollDice, BorderLayout.SOUTH);
 
-    rollDice.addActionListener(e -> diceLabel.setText(String.valueOf(dice.rollDice())));
+    rollDice.addActionListener(e -> {
+                if(controller.getCurrentIndex() == 0) {
+                    diceLabel.setText(String.valueOf(dice.rollDice()));
+                    controller.setBoard(String.valueOf(controller.getDiceResult()));
+
+                    if(controller.getPlayer(1).isLastScored()){
+                       controller.setPlayerIndex(2);
+                    }
+                    else if(controller.getPlayer(2).isLastScored()){
+                        controller.setPlayerIndex(1);
+                    }
+                    controller.refreshBoard();
+                }
+            }
+
+    );
 
     centerPiles.add(drawPanel);
     centerPiles.add(dicePanel, BorderLayout.CENTER);
@@ -111,7 +134,20 @@ public JPanel createSouthPanel() {
     dicePanel.add(diceLabel, BorderLayout.CENTER);
     dicePanel.add(rollDice, BorderLayout.SOUTH);
 
-    rollDice.addActionListener(e -> diceLabel.setText(String.valueOf(dice.rollDice())));
+    rollDice.addActionListener(e -> {
+                if(controller.getCurrentIndex() == 0) {
+                    diceLabel.setText(String.valueOf(dice.rollDice()));
+
+                    if(controller.getPlayer(1).isLastScored()){
+                        controller.setPlayerIndex(2);
+                    }
+                    else if(controller.getPlayer(2).isLastScored()){
+                        controller.setPlayerIndex(1);
+                    }
+                }
+            }
+
+    );
 
 
     centerPiles.add(drawPanel);
@@ -125,6 +161,9 @@ public JPanel createSouthPanel() {
 
 public void refreshDiscard(){
     String newImgPath = discard.getTopCard().getImgPath();
+    p1Score.setText("Player 1 Score: " + controller.getp1Score());
+    p2Score.setText("Player 2 Score: " + controller.getp2Score());
+
     discardPile.setIcon(new ImageIcon(newImgPath));
     discardPanel.revalidate();
     discardPanel.repaint();

@@ -1,10 +1,12 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * Class that essentially holds the current board image being presented and the logic to change it based on the card
  * played.
  */
-public class BoardState {
+public class BoardState implements Serializable {
     public BoardState() {}
     public BoardState(String type){
         this.position = type;
@@ -18,8 +20,9 @@ public class BoardState {
         return position;
     }
     public String getBoardImg() {
-        return imgPath;
+        return "images/qtboard"+ position + ".jpg";
     }
+    public void setPosition(String position) { this.position = position; }
     /**
      * Implement logic to change board based on card last played or diceroll at beginning
      */

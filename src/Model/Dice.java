@@ -1,10 +1,12 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * Very simple, just a dice that contains a number that represents the face up
  * Not really sure if it contains any rolling logic. Probably?
  */
-public class Dice {
+public class Dice implements Serializable {
     private int diceResult;
 
     public int rollDice(){

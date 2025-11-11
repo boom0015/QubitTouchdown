@@ -4,6 +4,7 @@ import Controller.GameController;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -30,8 +31,23 @@ public class Menu extends JMenuBar{
 
         save= new JMenuItem(lSave);
         menu.add(save);
-        load.addActionListener(e -> controller.loadGame());
-        save.addActionListener(e -> controller.saveGame());
+        load.addActionListener(e -> {
+            try {
+                controller.loadGame();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to load game: " + ex.getMessage());
+            }
+        });
+
+        save.addActionListener(e -> {
+            try {
+                controller.saveGame();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to save game: " + ex.getMessage());
+            }
+        });
 
 
         menuBar.add(menu);

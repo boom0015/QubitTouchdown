@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +10,7 @@ import java.util.Collections;
  * The deck is essentially used to determine the game's end. We can technically make it
  * bigger or smaller as the player dictates but we'll put that aside for now
  */
-public class Deck {
+public class Deck implements Serializable {
     public ArrayList<Card> cardsInDeck;
 
     /**
