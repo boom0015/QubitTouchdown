@@ -10,13 +10,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * This class I'm nott quite sure how to implement just yet. Actions recieved by the view are sent here to essentially
- * be preocessed and determine the relevanyt logic to implement in the model.
+ * Controller for MVC model. Determines appropriate actions to take based on buttons pressed in view
  */
 public class GameController {
     private Gamestate model;
     private QTouchInterface view;
-
+    public GameController() {
+    }
     public GameController(Gamestate model, QTouchInterface view) {
         this.model = model;
         this.view = view;
@@ -28,7 +28,7 @@ public class GameController {
 
     public ResourceBundle getBundle() {
         Settings settings = getSettings();
-        ResourceBundle bundle = ResourceBundle.getBundle("LanguageResources.messages");
+        ResourceBundle bundle = ResourceBundle.getBundle("LanguageResources.Messages");
         return bundle;
     }
 
@@ -65,11 +65,40 @@ public class GameController {
     }
 
     public void playCard(Card card) {
+        System.out.println("[Controller] playCard() start: currentIndex=" + model.getIndex());
         model.playCard(card);
-        model.drawCard();
-        model.nextPlayer();
 
+        // perform the model changes
+        model.playCard(card);
+
+        // attempt to draw only if a player is active (1 or 2)
+        model.drawCard();
+
+        // if a goal was scored, do NOT advance the player index;
+        // changeBoard already set currentPlayerIndex = 0 in that case.
+        // If no goal, advance to next player.
+        if (!model.getGoalScored()) {
+            model.nextPlayer();
+        } else {
+            // clear the flag so subsequent plays behave normally
+            model.clearGoalScored(); // add this method to Gamestate (see below)
+        }
+
+        // centralize UI updates here (controller coordinates view + south panel)
         view.refreshBoard();
+
+        refreshDiscard();         // calls view.getSouthPanel().refreshDiscard()
+        System.out.println("[Controller] after model.playCard: p1=" + model.getp1Score() + " p2=" + model.getp2Score() + " goalScored=" + model.getGoalScored());
+        refreshPlayer();
+
+    }
+
+    private void refreshPlayer() {
+        view.refreshPlayer();
+    }
+
+    private void endTurn() {
+
     }
 
     public Player getPlayer(int player){
@@ -157,6 +186,24 @@ public class GameController {
         view.refreshBoard();
     }
 
+    public void cardButtonPress(Player player, Card card) {
+
+        if (player.getIndex() == getCurrentIndex()
+                && !"Pile2".equals(card.getCardType())) {
+            playCard(card);
+            view.refreshHand();
+            refreshDiscard();
+        }
+    }
+    /**
+     * Update the gamestate reference (used when receiving updates from server)
+     */
+    public void updateGamestate(Model.Gamestate newGamestate) {
+        this.model = newGamestate;
+        // Reconnect the controller reference
+        this.model.setController(this);
+    }
 }
+
 
 

@@ -27,14 +27,14 @@ public class QTouchInterface {
 	private String lLanguage = "Language";
 
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 	       javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
 	                createAndShowGUI(Locale.ENGLISH);
 	            }
 	       });
 	}
-	
+*/
 	
 	static private void createAndShowGUI(Locale locale) {
 		JFrame frame = new JFrame("Qubit Touchdown");

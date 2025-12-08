@@ -7,6 +7,7 @@ import java.io.Serializable;
  * played.
  */
 public class BoardState implements Serializable {
+    private static final long serialVersionUID = 1L;
     public BoardState() {}
     public BoardState(String type){
         this.position = type;

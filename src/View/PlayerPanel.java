@@ -18,10 +18,54 @@ public class PlayerPanel extends JPanel {
     private GameController controller;
 
     private JPanel playerHandPanel;
+    private JLabel nameLabel;
+    private JLabel imageLabel;
+    private JComboBox<String> playerSelect;
 
     public PlayerPanel(Player player, GameController controller) {
         this.player = player;
         this.controller = controller;
+
+        // Use the panel itself as the container
+        setLayout(new BorderLayout());
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
+        // Dropdown
+        String[] players = {"Player 1", "Player 2"};
+        playerSelect = new JComboBox<>(players);
+        playerSelect.setMaximumSize(new Dimension(Integer.MAX_VALUE, playerSelect.getPreferredSize().height));
+
+        // Player display
+        nameLabel = new JLabel("Player " + player.getIndex(), SwingConstants.CENTER);
+        imageLabel = new JLabel(new ImageIcon(player.getIndex() == 2 ? "images/player2.jpg" : "images/player1.jpg"), SwingConstants.CENTER);
+
+        // Update when selection changes
+        playerSelect.addActionListener(e -> {
+            String selected = (String) playerSelect.getSelectedItem();
+            nameLabel.setText(selected);
+
+            String imagePath = switch (selected) {
+                case "Player 2" -> "images/player2.jpg";
+                default -> "images/player1.jpg";
+            };
+            imageLabel.setIcon(new ImageIcon(imagePath));
+        });
+
+        playerSelect.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        container.add(playerSelect);
+        container.add(imageLabel);
+        container.add(nameLabel);
+
+        // initial hand panel built from model
+        playerHandPanel = PlayerHand(player.getHand());
+        container.add(playerHandPanel);
+
+        // add container to this panel
+        add(container, BorderLayout.CENTER);
     }
     public JPanel playerBuilder(Player player){
         JPanel panel = new JPanel(new BorderLayout());
@@ -77,14 +121,9 @@ public class PlayerPanel extends JPanel {
             cardButton.setMinimumSize(new Dimension(100, 150));
 
             cardButton.addActionListener(e -> {
-                        if (player.getIndex() == controller.getCurrentIndex()
-                                && !"Pile2".equals(card.getCardType())) {
-                            controller.playCard(card);
-                            refreshHand();
-                            controller.refreshDiscard();
-                        }
-                    }
+                        controller.cardButtonPress(player, card);
 
+                    }
             );
                 //Add logic to print log to player text box / game logic
 
@@ -98,7 +137,7 @@ public class PlayerPanel extends JPanel {
         return panel;
     }
 
-    private void refreshHand() {
+    public void refreshHand() {
         ArrayList<Card> cards = player.getHand();
 
         playerHandPanel.removeAll();

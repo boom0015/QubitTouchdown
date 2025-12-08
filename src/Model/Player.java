@@ -13,6 +13,7 @@ public class Player implements Serializable {
     int playerIndex;
     int touchdowns = 0;
     boolean lastScored = false;
+    private static final long serialVersionUID = 1L;
 
     public Player(int index){
         this.playerIndex = index;
@@ -59,5 +60,8 @@ public class Player implements Serializable {
     }
     public void scoreUp(){
         touchdowns++;
+        System.out.println("[Player] scoreUp() called for playerIndex=" + playerIndex + ", newScore=" + touchdowns);
     }
+
+    public void clearLastScored() { lastScored = false; }
 }

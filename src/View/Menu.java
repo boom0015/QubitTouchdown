@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * I believe the menu was already made. Simply needs to be moved here.
+ * Menu for adjusting game settings
  */
 public class Menu extends JMenuBar{
     private JMenuBar menuBar;

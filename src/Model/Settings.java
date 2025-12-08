@@ -8,6 +8,7 @@ import java.util.Locale;
  *  changing language and whatever else we want it to do.
  */
 public class Settings implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Locale language;
 
 

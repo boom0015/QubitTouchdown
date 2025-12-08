@@ -9,6 +9,10 @@ import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Serves as the main game interface/View of the MVC, has action listeners which tell the controller what has happened
+ * in the game
+ */
 public class QTouchInterface {
     private ResourceBundle bundle;
     private GameController controller;
@@ -33,6 +37,8 @@ public class QTouchInterface {
     private Player player2;
     private SouthPanel southPanel;
     private JMenuBar menu;
+    private PlayerPanel playerPanel1;
+    private PlayerPanel playerPanel2;
 
 
     public QTouchInterface() {}
@@ -59,9 +65,15 @@ public class QTouchInterface {
         frame.setSize(1280, 720);
         frame.setLayout(new BorderLayout());
 
+        // FIX: Load bundle directly if controller doesn't have it
+        if (controller != null) {
+            bundle = controller.getBundle();
+        }
 
-        bundle = controller.getBundle();
-
+        if (bundle == null) {
+            // Load bundle directly when controller is not initialized
+            bundle = ResourceBundle.getBundle("LanguageResources.Messages", currentLocale);
+        }
         english = bundle.getString("language.english");
         french = bundle.getString("language.french");
         lGame = bundle.getString("menu.game");
@@ -115,11 +127,18 @@ public class QTouchInterface {
 
         return southPanel;
     }
-    private JPanel buildPlayerPanel(Player player){
-        PlayerPanel playerPanelBuilder = new PlayerPanel(player, controller);
-        JPanel playerPanel =  new JPanel();
-        playerPanel = playerPanelBuilder.playerBuilder(player);
-        return playerPanel;
+    private PlayerPanel buildPlayerPanel(Player player){
+        if(player == player1){
+            playerPanel1 = new PlayerPanel(player, controller);
+            return playerPanel1;
+        }
+        else if(player == player2){
+            playerPanel2 = new PlayerPanel(player, controller);
+            return playerPanel2;
+        }
+
+
+        return null;
     }
     private Board buildBoardPanel(){
       board = controller.getBoard();
@@ -135,4 +154,72 @@ public class QTouchInterface {
     public void refreshBoard(){
         boardPanel.refreshBoard();
     }
+
+    public void refreshPlayer() {
+        playerPanel1.refreshHand();
+        playerPanel2.refreshHand();
+    }
+
+    public void refreshHand() {
+        playerPanel1.refreshHand();
+        playerPanel2.refreshHand();
+    }
+    /**
+     * Check if the interface window is visible (for network mode)
+     */
+    public boolean isVisible() {
+        return frame != null && frame.isVisible();
+    }
+
+    /**
+     * Update the entire UI from a new gamestate (for network mode)
+     * When server sends updated state, this refreshes everything
+     */
+    public void updateFromGamestate(Model.Gamestate gs) {
+        // Update the controller's model reference
+        if (controller != null) {
+            controller.updateGamestate(gs);
+        }
+
+        // Only refresh if components exist
+        if (boardPanel != null) {
+            refreshBoard();
+        }
+        if (playerPanel1 != null && playerPanel2 != null) {
+            refreshHand();
+        }
+        if (southPanel != null) {
+            southPanel.refreshDiscard();
+        }
+    }
+    public GameController getController() {
+        return controller;
+    }
+    /**
+     * Show which player's turn it is (for network mode)
+     */
+    public void showTurnIndicator(int playerIndex) {
+        // Simple implementation - just show in title bar
+        if (frame != null) {
+            if (playerIndex == 0) {
+                frame.setTitle("Qubit Touchdown - Waiting for dice roll");
+            } else {
+                frame.setTitle("Qubit Touchdown - Player " + playerIndex + "'s Turn");
+            }
+        }
+
+        // Optional: You could also highlight the player panel
+        // or show a more prominent indicator if you want
+    }
+
+    /**
+     * Update score displays (for network mode)
+     */
+    public void updateScores(int p1Score, int p2Score) {
+        // The scores are shown in SouthPanel, so refresh it
+        if (southPanel != null) {
+            southPanel.refreshDiscard(); // This already updates scores
+        }
+    }
+
 }

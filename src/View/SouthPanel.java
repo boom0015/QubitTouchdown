@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The Player logs, the card pile, and the discard/deck are contained in the south panel. This class collects yhose
+ * The Player logs, the card pile, and the discard/deck are contained in the south panel. This class collects those
  * elements into one panel for the central interface
  */
 public class SouthPanel extends JPanel {
@@ -159,15 +159,20 @@ public JPanel createSouthPanel() {
     return southPanel;
 }
 
-public void refreshDiscard(){
-    String newImgPath = discard.getTopCard().getImgPath();
-    p1Score.setText("Player 1 Score: " + controller.getp1Score());
-    p2Score.setText("Player 2 Score: " + controller.getp2Score());
+    public void refreshDiscard(){
+        String newImgPath = (discard.getTopCard() != null)
+                ? discard.getTopCard().getImgPath()
+                : "images/pile1.jpg";
 
-    discardPile.setIcon(new ImageIcon(newImgPath));
-    discardPanel.revalidate();
-    discardPanel.repaint();
-}
+        p1Score.setText("Player 1 Score: " + controller.getp1Score());
+        p2Score.setText("Player 2 Score: " + controller.getp2Score());
+
+        discardPile.setIcon(new ImageIcon(newImgPath));
+
+        // refresh the entire south panel so all labels update
+        revalidate();
+        repaint();
+    }
 
 private void refreshEastLog(){
     eastLog.revalidate();

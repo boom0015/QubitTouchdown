@@ -1,14 +1,17 @@
 package Model;
 
+import Controller.GameController;
+
 import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * The class or object that contains the literal state of the game. All created objects, lists, cards players logs
- * Whatever, it all goes in here so we have a state that can be used for modelling purposes
- * as well as savestates
+ * The class or object that contains the literal state of the game. All created objects, lists, cards players logs,
+ * as well as logic to maniupulate the state of the game is here. Sort of the core of the game
+
  */
 public class Gamestate implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int diceResult;
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
@@ -16,9 +19,24 @@ public class Gamestate implements Serializable {
 	private Deck discard = new Deck();
 	private int currentPlayerIndex =1;
 	private Settings properties;
+	private boolean goalScored = false;
+	private GameController controller;
 	
 	private Dice dice = new Dice();
 	private BoardState board = new BoardState("0");
+
+
+
+
+
+//Connection/DB methods-----------------------------------------------------------------
+
+
+
+	//------------------------------------------------------------------------
+	public void setController(GameController controller) {
+		this.controller = controller;
+	}
 
 	public void initializeNewGame(){
 		properties = new Settings();
@@ -46,16 +64,23 @@ public class Gamestate implements Serializable {
 	}
 
 
-	
+
 	public void playCard(Card card) {
+		System.out.println("[Gamestate] playCard() called. currentPlayerIndex=" + currentPlayerIndex + " card=" + card.getCardType());
 		String type= card.getCardType();
 		if(currentPlayerIndex==1) {
+			System.out.println("[Gamestate] -> delegating to player1.playCard()");
 			player1.playCard(card);
-		}else if(currentPlayerIndex==2) {
+		} else if(currentPlayerIndex==2) {
+			System.out.println("[Gamestate] -> delegating to player2.playCard()");
 			player2.playCard(card);
+		} else {
+			System.out.println("[Gamestate] -> currentPlayerIndex not 1/2: " + currentPlayerIndex);
 		}
 		discard.addToDeck(card);
 		changeBoard(type);
+		// print scores after changeBoard
+		System.out.println("[Gamestate] after changeBoard: p1=" + player1.getScore() + " p2=" + player2.getScore() + " currentPlayerIndex=" + currentPlayerIndex + " goalScored=" + goalScored);
 	}
 
 	public Card drawCard(){
@@ -110,18 +135,31 @@ public class Gamestate implements Serializable {
 					board.position="I";
 				}
 				break;
+
 			case "P":
+				System.out.println("[Gamestate.changeBoard] scoring for player2 (case P) — type=" + type + " position=" + currentPosition);
 				player2.scoreUp();
 				player2.setLastScored();
-				board.setPosition("0");
+				player1.clearLastScored();
+				goalScored = true;
 				currentPlayerIndex = 0;
+				board.setPosition("0");
+				controller.refreshDiscard();
+				controller.refreshBoard();
 				break;
-			case"M":
+
+			case "M":
+				System.out.println("[Gamestate.changeBoard] scoring for player1 (case M) — type=" + type + " position=" + currentPosition);
 				player1.scoreUp();
 				player1.setLastScored();
-				board.setPosition("0");
+				player2.clearLastScored();
+				goalScored = true;
 				currentPlayerIndex = 0;
+				board.setPosition("0");
+				controller.refreshDiscard();
+				controller.refreshBoard();
 				break;
+
 			default:
 				board.position="0";
 		}
@@ -188,7 +226,7 @@ public class Gamestate implements Serializable {
 		return player2;
 	}
 	public void createDeck() {
-		String cardType[]={"I","M","H","R","X","Y","Z"};
+		String cardType[]={"I","M","H","R","X","Y","Z","S"};
 		int cardAmount=0;
 		for(int i=0;i<8;i++) {
 			for(int j =0;j<cardType.length;j++) {
@@ -218,8 +256,7 @@ public class Gamestate implements Serializable {
 	public boolean isLastScored(int player){
 		if (player == 1){
 			return player1.isLastScored();
-		}
-		else if (player == 1) {
+		} else if (player == 2) {
 			return player2.isLastScored();
 		}
 		return false;
@@ -231,4 +268,12 @@ public class Gamestate implements Serializable {
 	public void setBoard(String type) {
 		board.setPosition(type);
 	}
+	public boolean getGoalScored() {
+		return goalScored;
+	}
+
+	public void clearGoalScored() {
+		goalScored = false;
+	}
+
 }

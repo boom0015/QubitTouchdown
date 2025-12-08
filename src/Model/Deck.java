@@ -6,11 +6,10 @@ import java.util.Collections;
 
 /**
  *Just a list of cards, this'll be used to represent the cards in the actual deck, as well as another
- * deck object for discards. Not sure if we actually need one? Maybe for game ending logic either way.
- * The deck is essentially used to determine the game's end. We can technically make it
- * bigger or smaller as the player dictates but we'll put that aside for now
+ * deck object for discards.
  */
 public class Deck implements Serializable {
+    private static final long serialVersionUID = 1L;
     public ArrayList<Card> cardsInDeck;
 
     /**
